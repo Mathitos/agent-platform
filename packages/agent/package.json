@@ -1,22 +1,15 @@
 {
-  "name": "@loom/cli",
+  "name": "@loom/agent",
   "version": "0.1.0",
-  "description": "CLI for Loom agent platform",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "bin": {
-    "loom": "./dist/bin.js"
-  },
   "scripts": {
     "build": "tsc",
-    "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "start": "node dist/bin.js"
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@loom/core": "workspace:*",
-    "@loom/providers": "workspace:*",
-    "@loom/agent": "workspace:*",
     "@loom/tools": "workspace:*"
   },
   "devDependencies": {

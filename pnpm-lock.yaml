@@ -18,14 +18,39 @@ importers:
         specifier: ^1.2.2
         version: 1.6.1(@types/node@20.19.43)
 
+  packages/agent:
+    dependencies:
+      '@loom/core':
+        specifier: workspace:*
+        version: link:../core
+      '@loom/tools':
+        specifier: workspace:*
+        version: link:../tools
+    devDependencies:
+      '@types/node':
+        specifier: ^20.11.16
+        version: 20.19.43
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+      vitest:
+        specifier: ^1.2.2
+        version: 1.6.1(@types/node@20.19.43)
+
   packages/cli:
     dependencies:
+      '@loom/agent':
+        specifier: workspace:*
+        version: link:../agent
       '@loom/core':
         specifier: workspace:*
         version: link:../core
       '@loom/providers':
         specifier: workspace:*
         version: link:../providers
+      '@loom/tools':
+        specifier: workspace:*
+        version: link:../tools
     devDependencies:
       '@types/node':
         specifier: ^20.11.16
@@ -52,6 +77,22 @@ importers:
         specifier: workspace:*
         version: link:../core
     devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+      vitest:
+        specifier: ^1.2.2
+        version: 1.6.1(@types/node@20.19.43)
+
+  packages/tools:
+    dependencies:
+      '@loom/core':
+        specifier: workspace:*
+        version: link:../core
+    devDependencies:
+      '@types/node':
+        specifier: ^20.11.16
+        version: 20.19.43
       typescript:
         specifier: ^5.3.3
         version: 5.9.3

@@ -24,13 +24,18 @@ export class OpenAIProvider extends ProviderAdapter {
 
   async chat(request: ChatCompletionRequest): Promise<ChatCompletionResponse> {
     const url = `${this.baseUrl}/v1/chat/completions`;
-    const body = {
+    const body: any = {
       model: request.model || this.model,
       messages: request.messages,
       temperature: request.temperature,
       max_tokens: request.maxTokens,
       stream: false,
     };
+
+    // Include tools if provided
+    if (request.tools && request.tools.length > 0) {
+      body.tools = request.tools;
+    }
 
     const response = await fetch(url, {
       method: 'POST',
@@ -47,15 +52,17 @@ export class OpenAIProvider extends ProviderAdapter {
     }
 
     const data = await response.json() as any;
+    const message = data.choices[0]?.message;
 
     return {
-      content: data.choices[0]?.message?.content || '',
+      content: message?.content || null,
       model: data.model,
       usage: data.usage ? {
         promptTokens: data.usage.prompt_tokens,
         completionTokens: data.usage.completion_tokens,
         totalTokens: data.usage.total_tokens,
       } : undefined,
+      tool_calls: message?.tool_calls,
     };
   }
 
