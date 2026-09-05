@@ -7,6 +7,7 @@ export const strings = {
       commands: {
         chat: 'Start a chat session',
         agent: 'Start agent with tools (M2: files, shell, memory)',
+        workflow: 'Manage multi-agent workflows',
         locale: 'Show or set the locale (en, pt-BR)',
         version: 'Show version',
         help: 'Show help',
@@ -48,6 +49,27 @@ export const strings = {
         failureTitle: 'Workflow Failed',
         failureMessage: (name: string) => `Workflow "${name}" failed`,
       },
+      help: {
+        title: 'Loom Workflow Management',
+        usage: 'Usage',
+        init: 'Initialize a new workflow file',
+        templates: 'Available templates',
+        'templates.default': 'Basic single-agent workflow',
+        'templates.flagship': 'Multi-agent PR workflow (builder → reviewer → supervisor)',
+        'templates.pr': 'Alias for flagship template',
+      },
+      init: {
+        success: (path: string) => `✓ Created workflow file: ${path}`,
+        nextSteps: 'Next steps:',
+        'nextSteps.configure': 'Set provider environment variables (OPENAI_API_KEY, etc.)',
+        'nextSteps.customize': 'Edit workflow.yaml to customize agents and steps',
+        'nextSteps.run': 'Run with: loom workflow run',
+      },
+      errors: {
+        unknownTemplate: (name: string) => `Unknown template: ${name}`,
+        invalidTemplate: (msg: string) => `Invalid template: ${msg}`,
+        fileExists: (path: string) => `File already exists: ${path}`,
+      },
     },
     errors: {
       providerNotConfigured: 'No provider configured. Set OPENAI_API_KEY or configure a provider.',
@@ -75,6 +97,7 @@ export const strings = {
       commands: {
         chat: 'Iniciar uma sessão de chat',
         agent: 'Iniciar agente com ferramentas (M2: arquivos, shell, memória)',
+        workflow: 'Gerenciar fluxos de trabalho multi-agente',
         locale: 'Mostrar ou definir o idioma (en, pt-BR)',
         version: 'Mostrar versão',
         help: 'Mostrar ajuda',
@@ -115,6 +138,27 @@ export const strings = {
         successMessage: (name: string) => `Fluxo de trabalho "${name}" concluído com sucesso`,
         failureTitle: 'Fluxo de Trabalho Falhou',
         failureMessage: (name: string) => `Fluxo de trabalho "${name}" falhou`,
+      },
+      help: {
+        title: 'Gerenciamento de Fluxo de Trabalho Loom',
+        usage: 'Uso',
+        init: 'Inicializar um novo arquivo de fluxo de trabalho',
+        templates: 'Modelos disponíveis',
+        'templates.default': 'Fluxo de trabalho básico de agente único',
+        'templates.flagship': 'Fluxo de trabalho multi-agente para PR (construtor → revisor → supervisor)',
+        'templates.pr': 'Alias para o modelo flagship',
+      },
+      init: {
+        success: (path: string) => `✓ Arquivo de fluxo de trabalho criado: ${path}`,
+        nextSteps: 'Próximos passos:',
+        'nextSteps.configure': 'Definir variáveis de ambiente do provedor (OPENAI_API_KEY, etc.)',
+        'nextSteps.customize': 'Editar workflow.yaml para personalizar agentes e etapas',
+        'nextSteps.run': 'Executar com: loom workflow run',
+      },
+      errors: {
+        unknownTemplate: (name: string) => `Modelo desconhecido: ${name}`,
+        invalidTemplate: (msg: string) => `Modelo inválido: ${msg}`,
+        fileExists: (path: string) => `Arquivo já existe: ${path}`,
       },
     },
     errors: {

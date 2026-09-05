@@ -7,6 +7,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### M7 — Flagship Workflow Template + Golden-Path Docs
+
+#### Added
+- `loom workflow init` command with template scaffolding (`--template flagship|default|pr`)
+- Flagship PR workflow template matching PRD spec (builder → reviewer → supervisor)
+- YAML workflow generation with inline comments and environment variable guidance
+- Template validation using existing `@loom/workflow` schema types
+- Comprehensive workflow template tests (21 tests covering scaffolding, validation, file creation)
+- Golden-path documentation in README (clone → install → configure → scaffold → run)
+- Bilingual workflow help strings (EN + PT-BR) for init command and templates
+
+#### Changed
+- README updated with honest packaging note (workspace deps require from-source install)
+- README includes golden-path section showing recommended flagship workflow path
+- Workflow init command extended: legacy JSON init + new template-based YAML scaffold
+- Status updated: M7 complete (all 570+ tests passing)
+
+#### Documentation
+- Golden-path section in README with flagship template walkthrough
+- Documented OpenAI builder, Bionic/Qwen reviewer, OpenAI supervisor architecture
+- Clear guidance that global npm install not ready until packages published/bundled
+
 ### M6 — OS Notifications + npm Packaging Polish
 
 #### Added
@@ -28,6 +50,48 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Fixed
 - Flaky timing test in budget-tracker (reduced assertion threshold for CI stability)
+
+### M5 — Multi-Agent Workflow Runner + Observability MVP
+
+#### Added
+- **Workflow runner** (`WorkflowRunner`)
+  - Loads workflow JSON files
+  - Executes steps in dependency order (DAG traversal)
+  - Enforces budgets (tokens, cost, wall-clock, retries)
+  - Handles `onFailure` strategies (retry, pauseHuman, abort)
+  - Supports pause/resume via persisted run state
+  - Generates unique run IDs (timestamp + random suffix)
+- **Workflow schema** (`WorkflowSchema`)
+  - Full validation with detailed error messages
+  - Agent roles: builder, reviewer, supervisor, specialist
+  - Parallel step support (`parallel: true`)
+  - `allowSupervisorMerge` flag for auto-merge
+- **Budget tracker** (`BudgetTracker`)
+  - Tracks tokens, cost, wall-clock time, retries
+  - Emits warnings at thresholds (50%, 75%, 90%)
+  - Hard stops when budgets exceeded
+- **Telemetry store** (`TelemetryStore`)
+  - Event types: run lifecycle, step lifecycle, budget events, provider calls, merge events
+  - User-namespaced storage (`~/.loom/users/{userId}/telemetry/`)
+  - JSON append-only log per run
+  - Query by run ID, event type, time range
+- **Observability** (`WorkflowObservability`)
+  - `status` — current workflow status (running/completed/failed/paused)
+  - `logs` — event stream with filtering and limits
+  - `report` — summary with duration, tokens, cost, artifacts
+  - Formatted output for CLI display
+- **CLI commands**
+  - `loom workflow init [name]` — scaffold workflow JSON
+  - `loom workflow run <file>` — execute workflow
+  - `loom workflow status <runId>` — show status
+  - `loom workflow logs <runId>` — show event logs
+  - `loom workflow report <runId>` — generate report
+- Comprehensive test suite (100+ tests across all workflow components)
+
+#### Documentation
+- ADR-002: Workflow schema design
+- ADR-003: Telemetry store design
+- Updated architecture docs with workflow package
 
 ### M4 — OSS Polish + i18n
 
@@ -135,9 +199,7 @@ Loom is a CLI agent platform that weaves multiple model providers into one workf
 
 ### Upcoming Milestones
 
-- **M3** — MCP + git/PR helpers
-- **M4** — OSS polish + i18n audit (in progress)
-- **M5+** — Multi-agent workflow runner, observability, supervisor auto-merge
+- **M8+** — Enhanced workflow features, agent specialization, production hardening
 
 See [docs/PRD.md](PRD.md) for the complete product roadmap.
 

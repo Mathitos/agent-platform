@@ -26,6 +26,9 @@ export class CLI {
       case 'agent':
         this.runAgent(args.slice(1));
         break;
+      case 'workflow':
+        this.runWorkflow(args.slice(1));
+        break;
       case 'git':
         this.runGit(args.slice(1));
         break;
@@ -50,6 +53,7 @@ export class CLI {
     console.log(`${t('cli.help')}:\n`);
     console.log(`  loom chat              ${t('cli.commands.chat')}`);
     console.log(`  loom agent [message]   ${t('cli.commands.agent')}`);
+    console.log(`  loom workflow <cmd>    ${t('cli.commands.workflow')}`);
     console.log(`  loom git <subcommand>  Git operations (status, diff, commit, branch-info)`);
     console.log(`  loom workflow          Multi-agent workflow runner (M5)`);
     console.log(`  loom locale [locale]   ${t('cli.commands.locale')}`);
@@ -72,14 +76,14 @@ export class CLI {
     await AgentCommand.execute(args);
   }
 
-  static async runGit(args: string[]): Promise<void> {
-    const { handleGitCommand } = await import('./commands/git');
-    await handleGitCommand(args);
-  }
-
   static async runWorkflow(args: string[]): Promise<void> {
     const { WorkflowCommand } = await import('./commands/workflow');
     await WorkflowCommand.execute(args);
+  }
+
+  static async runGit(args: string[]): Promise<void> {
+    const { handleGitCommand } = await import('./commands/git');
+    await handleGitCommand(args);
   }
 
   static runLocale(args: string[]): void {

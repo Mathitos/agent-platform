@@ -4,7 +4,7 @@
 
 **Loom** weaves many agents and model providers into one CLI workflow.
 
-> Status: M3 complete — Agent tools with MCP, Git, and PR support. Bilingual CLI (EN + PT-BR).
+> Status: M7 — Flagship workflow template + golden-path docs. Multi-agent PR workflow ready to scaffold.
 
 ## Quick Start
 
@@ -31,7 +31,7 @@ loom --help
 
 ### Installation from Source
 
-For development or testing the latest changes:
+**Note:** Loom is currently in development and uses `workspace:*` dependencies. The `@loom/cli` package is **not yet published to npm**. Global install via `npm i -g @loom/cli` will not work until packages are published or bundled. For now, **install from source** as shown below.
 
 ```bash
 # Clone the repository
@@ -46,6 +46,41 @@ pnpm build
 
 # Run the CLI
 pnpm loom --help
+```
+
+### Golden Path: From Clone to Running Workflow
+
+Here's the recommended path to get started with Loom's multi-agent workflows:
+
+```bash
+# 1. Clone and build
+git clone https://github.com/Mathitos/agent-platform.git
+cd agent-platform
+pnpm install
+pnpm build
+
+# 2. Configure providers
+export OPENAI_API_KEY="sk-..."                        # For OpenAI models
+export OPENAI_COMPATIBLE_BASE_URL="http://localhost:11434/v1"  # For Bionic/local
+export OPENAI_COMPATIBLE_API_KEY="local-key"
+
+# 3. Scaffold flagship workflow
+pnpm loom workflow init --template flagship
+cat .loom/workflow.yaml
+
+# 4. Run workflow and monitor
+pnpm loom workflow run .loom/workflow.yaml
+pnpm loom workflow status <runId>
+pnpm loom workflow report <runId>
+```
+
+The flagship template creates a multi-agent PR workflow:
+- **Builder** agent (OpenAI) — implements changes and opens PR
+- **Reviewer** agent (Qwen via Bionic) — reviews diff and tests  
+- **Supervisor** agent (OpenAI) — gates merge when checks pass
+
+Other templates: `--template default` for basic single-agent workflow, or `--template pr` (alias for flagship).
+
 ```
 
 ### Usage
@@ -77,8 +112,10 @@ loom git diff --staged
 loom git commit "feat: add new feature"
 loom git branch-info
 
-# Multi-agent workflow (M5)
-loom workflow init my-workflow
+# Multi-agent workflow (M5/M6/M7)
+loom workflow init --template flagship  # Scaffold flagship PR workflow
+loom workflow init --template default   # Basic workflow
+loom workflow init my-workflow          # Legacy JSON scaffold
 loom workflow run .loom/my-workflow.json
 loom workflow status <runId>
 loom workflow logs <runId>
@@ -234,7 +271,10 @@ No API keys are required to run the test suite.
 - **M1** — Skeleton CLI: provider interface, OpenAI-compat, bilingual strings ✅
 - **M2** — Harness core: agent with tools (files, shell, memory) ✅
 - **M3** — MCP + git/PR helpers ✅
-- **M4** — OSS polish + i18n audit (current)
+- **M4** — OSS polish + i18n audit ✅
+- **M5** — Workflow runner + observability MVP ✅
+- **M6** — OS notifications + packaging polish ✅
+- **M7** — Flagship workflow template + golden-path docs ✅
 
 See the [Product Requirements Document](docs/PRD.md) for the full roadmap and [CHANGELOG](docs/CHANGELOG.md) for version history.
 
