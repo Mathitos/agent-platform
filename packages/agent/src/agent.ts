@@ -11,6 +11,17 @@ import {
   FileWriteTool,
   ShellTool,
   MemoryTool,
+  MCPClientManager,
+  MCPServer,
+  MCPListToolsTool,
+  MCPCallToolTool,
+  GitStatusTool,
+  GitDiffTool,
+  GitCommitTool,
+  GitBranchInfoTool,
+  PRCreateTool,
+  PRViewTool,
+  PRListTool,
 } from '@loom/tools';
 
 export interface AgentConfig {
@@ -18,6 +29,9 @@ export interface AgentConfig {
   userId?: string;
   trustedPaths?: string[];
   maxIterations?: number;
+  mcpServers?: MCPServer[];
+  enableGitTools?: boolean;
+  enablePRTools?: boolean;
 }
 
 export interface AgentTurn {
@@ -31,6 +45,7 @@ export class AgentExecutor {
   private tools: Map<string, Tool>;
   private context: ToolExecutionContext;
   private maxIterations: number;
+  private mcpManager?: MCPClientManager;
 
   constructor(provider: ProviderAdapter, config: AgentConfig) {
     this.provider = provider;
@@ -42,6 +57,31 @@ export class AgentExecutor {
     this.registerTool(new FileWriteTool());
     this.registerTool(new ShellTool());
     this.registerTool(new MemoryTool());
+
+    // Register Git tools if enabled (default: true)
+    if (config.enableGitTools !== false) {
+      this.registerTool(new GitStatusTool());
+      this.registerTool(new GitDiffTool());
+      this.registerTool(new GitCommitTool());
+      this.registerTool(new GitBranchInfoTool());
+    }
+
+    // Register PR tools if enabled (default: true)
+    if (config.enablePRTools !== false) {
+      this.registerTool(new PRCreateTool());
+      this.registerTool(new PRViewTool());
+      this.registerTool(new PRListTool());
+    }
+
+    // Setup MCP servers if configured
+    if (config.mcpServers && config.mcpServers.length > 0) {
+      this.mcpManager = new MCPClientManager();
+      for (const server of config.mcpServers) {
+        this.mcpManager.registerServer(server);
+      }
+      this.registerTool(new MCPListToolsTool(this.mcpManager));
+      this.registerTool(new MCPCallToolTool(this.mcpManager));
+    }
 
     // Setup execution context
     this.context = {
@@ -175,6 +215,28 @@ export class AgentExecutor {
   }
 
   static getDefaultTools(): string[] {
-    return ['read_file', 'write_file', 'execute_shell', 'memory'];
+    return [
+      'read_file',
+      'write_file',
+      'execute_shell',
+      'memory',
+      'git_status',
+      'git_diff',
+      'git_commit',
+      'git_branch_info',
+      'pr_create',
+      'pr_view',
+      'pr_list',
+    ];
+  }
+
+  static getMCPTools(): string[] {
+    return ['mcp_list_tools', 'mcp_call_tool'];
+  }
+
+  async cleanup(): Promise<void> {
+    if (this.mcpManager) {
+      await this.mcpManager.shutdownAll();
+    }
   }
 }

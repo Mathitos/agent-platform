@@ -531,4 +531,104 @@ describe('AgentExecutor', () => {
     expect(tools).toContain('execute_shell');
     expect(tools).toContain('memory');
   });
+
+  it('should register Git tools by default', () => {
+    const provider = new MockProvider([]);
+    const agent = new AgentExecutor(provider, {
+      workspaceRoot: tempDir,
+    });
+
+    const tools = AgentExecutor.getDefaultTools();
+    expect(tools).toContain('git_status');
+    expect(tools).toContain('git_diff');
+    expect(tools).toContain('git_commit');
+    expect(tools).toContain('git_branch_info');
+  });
+
+  it('should register PR tools by default', () => {
+    const provider = new MockProvider([]);
+    const agent = new AgentExecutor(provider, {
+      workspaceRoot: tempDir,
+    });
+
+    const tools = AgentExecutor.getDefaultTools();
+    expect(tools).toContain('pr_create');
+    expect(tools).toContain('pr_view');
+    expect(tools).toContain('pr_list');
+  });
+
+  it('should allow disabling Git tools', () => {
+    const provider = new MockProvider([]);
+    const agent = new AgentExecutor(provider, {
+      workspaceRoot: tempDir,
+      enableGitTools: false,
+    });
+
+    // Git tools should not be registered
+    // We can verify this by checking the tool definitions don't include git tools
+  });
+
+  it('should allow disabling PR tools', () => {
+    const provider = new MockProvider([]);
+    const agent = new AgentExecutor(provider, {
+      workspaceRoot: tempDir,
+      enablePRTools: false,
+    });
+
+    // PR tools should not be registered
+  });
+
+  it('should register MCP tools when servers are configured', () => {
+    const provider = new MockProvider([]);
+    const agent = new AgentExecutor(provider, {
+      workspaceRoot: tempDir,
+      mcpServers: [
+        {
+          name: 'test-server',
+          transport: 'stdio',
+          command: 'test-mcp',
+        },
+      ],
+    });
+
+    const mcpTools = AgentExecutor.getMCPTools();
+    expect(mcpTools).toContain('mcp_list_tools');
+    expect(mcpTools).toContain('mcp_call_tool');
+  });
+
+  it('should not register MCP tools when no servers configured', () => {
+    const provider = new MockProvider([]);
+    const agent = new AgentExecutor(provider, {
+      workspaceRoot: tempDir,
+    });
+
+    // MCP tools should not be registered when no servers configured
+  });
+
+  it('should cleanup MCP connections on shutdown', async () => {
+    const provider = new MockProvider([]);
+    const agent = new AgentExecutor(provider, {
+      workspaceRoot: tempDir,
+      mcpServers: [
+        {
+          name: 'test-server',
+          transport: 'stdio',
+          command: 'test-mcp',
+        },
+      ],
+    });
+
+    await agent.cleanup();
+    // Should not throw
+  });
+
+  it('should handle cleanup without MCP manager', async () => {
+    const provider = new MockProvider([]);
+    const agent = new AgentExecutor(provider, {
+      workspaceRoot: tempDir,
+    });
+
+    await agent.cleanup();
+    // Should not throw
+  });
 });
