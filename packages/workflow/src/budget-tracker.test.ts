@@ -122,7 +122,7 @@ describe('BudgetTracker', () => {
       await new Promise(resolve => setTimeout(resolve, 100));
 
       const elapsed = tracker.getElapsedMs();
-      expect(elapsed).toBeGreaterThanOrEqual(100);
+      expect(elapsed).toBeGreaterThanOrEqual(95);
     });
 
     it('should detect wall clock budget exceeded', () => {

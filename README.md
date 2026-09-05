@@ -11,9 +11,27 @@
 ### Prerequisites
 
 - Node.js 18+
-- pnpm 8+
+- pnpm 8+ (or npm 9+)
+
+### Global Installation (Recommended)
+
+Once published to npm, install globally for the `loom` command on your PATH:
+
+```bash
+# Using npm
+npm install -g @loom/cli
+
+# Or using pnpm
+pnpm add -g @loom/cli
+
+# Verify installation
+loom --version
+loom --help
+```
 
 ### Installation from Source
+
+For development or testing the latest changes:
 
 ```bash
 # Clone the repository
@@ -32,30 +50,39 @@ pnpm loom --help
 
 ### Usage
 
+If installed globally, use `loom` directly. If running from source, use `pnpm loom`.
+
 ```bash
 # Show help
-pnpm loom --help
+loom --help
 
 # Show version
-pnpm loom version
+loom version
 
 # Single-turn chat
-pnpm loom chat "What is TypeScript?"
+loom chat "What is TypeScript?"
 
 # Interactive chat REPL
-pnpm loom chat
+loom chat
 
 # Agent with tools (files, shell, memory, MCP, git)
-pnpm loom agent "Read the README and summarize it"
+loom agent "Read the README and summarize it"
 
 # Interactive agent REPL
-pntml loom agent
+loom agent
 
 # Git operations
-pnpm loom git status
-pnpm loom git diff --staged
-pnpm loom git commit "feat: add new feature"
-pnpm loom git branch-info
+loom git status
+loom git diff --staged
+loom git commit "feat: add new feature"
+loom git branch-info
+
+# Multi-agent workflow (M5)
+loom workflow init my-workflow
+loom workflow run .loom/my-workflow.json
+loom workflow status <runId>
+loom workflow logs <runId>
+loom workflow report <runId>
 ```
 
 ## Configuration

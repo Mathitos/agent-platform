@@ -199,6 +199,34 @@ describe('I18n', () => {
       const commandTimeoutFn = I18n.t('errors.commandTimeout');
       expect(commandTimeoutFn(5000)).toContain('expirou');
     });
+
+    it('should translate workflow notification strings to Portuguese', () => {
+      expect(I18n.t('workflow.notification.successTitle')).toBe('Fluxo de Trabalho Concluído');
+      expect(I18n.t('workflow.notification.successMessage')('test-workflow')).toBe(
+        'Fluxo de trabalho "test-workflow" concluído com sucesso'
+      );
+      expect(I18n.t('workflow.notification.failureTitle')).toBe('Fluxo de Trabalho Falhou');
+      expect(I18n.t('workflow.notification.failureMessage')('test-workflow')).toBe(
+        'Fluxo de trabalho "test-workflow" falhou'
+      );
+    });
+  });
+
+  describe('Workflow notifications (English)', () => {
+    beforeEach(() => {
+      I18n.setLocale('en');
+    });
+
+    it('should return workflow notification strings', () => {
+      expect(I18n.t('workflow.notification.successTitle')).toBe('Workflow Complete');
+      expect(I18n.t('workflow.notification.successMessage')('test-workflow')).toBe(
+        'Workflow "test-workflow" completed successfully'
+      );
+      expect(I18n.t('workflow.notification.failureTitle')).toBe('Workflow Failed');
+      expect(I18n.t('workflow.notification.failureMessage')('test-workflow')).toBe(
+        'Workflow "test-workflow" failed'
+      );
+    });
   });
 
   describe('Translation lookup', () => {

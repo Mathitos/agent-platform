@@ -27,7 +27,8 @@
     "build": "pnpm -r run build",
     "test": "pnpm -r run test",
     "typecheck": "pnpm -r run typecheck",
-    "loom": "pnpm --filter @loom/cli start"
+    "loom": "pnpm --filter @loom/cli start",
+    "smoke-test": "node packages/cli/dist/bin.js --version && node packages/cli/dist/bin.js --help"
   },
   "devDependencies": {
     "@types/node": "^20.11.16",

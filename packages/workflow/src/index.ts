@@ -4,3 +4,4 @@ export * from './telemetry-store';
 export * from './budget-tracker';
 export * from './workflow-runner';
 export * from './observability';
+export * from './notifier';
