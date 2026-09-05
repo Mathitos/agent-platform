@@ -40,7 +40,8 @@
     "@loom/core": "workspace:*",
     "@loom/providers": "workspace:*",
     "@loom/agent": "workspace:*",
-    "@loom/tools": "workspace:*"
+    "@loom/tools": "workspace:*",
+    "@loom/workflow": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^20.11.16",
