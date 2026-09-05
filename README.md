@@ -4,17 +4,17 @@
 
 > Status: M1 skeleton — basic CLI with provider adapters.
 
-## Quick Start
+## Docs
 
-<<<<<<< HEAD
 - [Product Requirements Document (v1 FROZEN)](docs/PRD.md)
 - [Technical Design v0](docs/architecture.md)
 - [ADR-001 — Provider adapters](docs/adr/001-provider-adapters.md)
 - [ADR-002 — Workflow schema](docs/adr/002-workflow-schema.md)
 - [ADR-003 — Telemetry store](docs/adr/003-telemetry-store.md)
-=======
+
+## Quick Start
+
 ### Prerequisites
->>>>>>> ffe2853 (feat: M1 skeleton implementation)
 
 - Node.js 18+ 
 - pnpm 8+
@@ -229,11 +229,9 @@ Loom is open source under the MIT license. Contributions welcome!
 
 [MIT](LICENSE) © Matheus Anzzulin
 
-<<<<<<< HEAD
-<!-- loom cloud-agent ok -->
-=======
 ## Resources
 
 - [Product Requirements Document](docs/PRD.md)
 - [GitHub Repository](https://github.com/Mathitos/agent-platform)
->>>>>>> ffe2853 (feat: M1 skeleton implementation)
+
+<!-- loom cloud-agent ok -->
