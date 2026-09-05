@@ -13,25 +13,25 @@
 - Node.js 18+
 - pnpm 8+ (or npm 9+)
 
-### Global Installation (Recommended)
+### Installation
 
-Once published to npm, install globally for the `loom` command on your PATH:
+#### Option 1: Install from Tarball (Recommended)
+
+The CLI is bundled as a single-file distributable. Install from the tarball:
 
 ```bash
-# Using npm
-npm install -g @loom/cli
-
-# Or using pnpm
-pnpm add -g @loom/cli
+# Download the latest release tarball from GitHub Releases
+# or build it locally (see Development section)
+npm install -g loom-cli-0.1.0.tgz
 
 # Verify installation
 loom --version
 loom --help
 ```
 
-### Installation from Source
+#### Option 2: Install from Source
 
-**Note:** Loom is currently in development and uses `workspace:*` dependencies. The `@loom/cli` package is **not yet published to npm**. Global install via `npm i -g @loom/cli` will not work until packages are published or bundled. For now, **install from source** as shown below.
+For development or bleeding-edge features:
 
 ```bash
 # Clone the repository
@@ -47,6 +47,8 @@ pnpm build
 # Run the CLI
 pnpm loom --help
 ```
+
+> **Note:** The `@loom/cli` package is not yet published to npm. Global install via `npm i -g @loom/cli` will not work until published. Use the tarball (Option 1) or source installation (Option 2).
 
 ### Golden Path: From Clone to Running Workflow
 
@@ -121,6 +123,8 @@ loom workflow status <runId>
 loom workflow logs <runId>
 loom workflow report <runId>
 ```
+
+> **Note:** When running from source, prefix commands with `pnpm` (e.g., `pnpm loom --help`)
 
 ## Configuration
 
@@ -248,6 +252,21 @@ pnpm test
 # Run tests for a specific package
 cd packages/core && pnpm test
 ```
+
+### Building and Packaging
+
+```bash
+# Build all packages
+pnpm build
+
+# Create distributable tarball
+pnpm pack:cli
+
+# Test the packed tarball
+pnpm test:pack
+```
+
+The `pack:cli` command creates a single-file bundled CLI at `dist/loom-cli-0.1.0.tgz` that can be installed globally with `npm install -g` without needing to clone the monorepo or publish workspace packages.
 
 ### Testing Without Live API Keys
 
