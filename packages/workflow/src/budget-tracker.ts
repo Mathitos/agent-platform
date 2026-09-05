@@ -206,9 +206,25 @@ export class BudgetTracker {
       'claude-3-opus': 15.0,
       'claude-3-sonnet': 3.0,
       qwen: 0.0,
+      bionic: 0.0,
+      'local-model': 0.0,
     };
 
-    const price = pricePerMillionTokens[model] || 5.0;
+    // Check exact match first, then lowercase, then default
+    let price: number;
+    if (model in pricePerMillionTokens) {
+      price = pricePerMillionTokens[model];
+    } else if (model.toLowerCase() in pricePerMillionTokens) {
+      price = pricePerMillionTokens[model.toLowerCase()];
+    } else {
+      price = 5.0;
+    }
+    
+    // Return 0 for free models
+    if (price === 0.0) {
+      return 0.0;
+    }
+    
     return (tokens / 1000000) * price;
   }
 }

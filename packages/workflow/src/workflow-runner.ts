@@ -15,6 +15,7 @@ import {
 } from './types';
 import { TelemetryStore } from './telemetry-store';
 import { BudgetTracker } from './budget-tracker';
+import { MockProvider } from './mock-provider';
 
 export class WorkflowRunner {
   private workflow: WorkflowDefinition;
@@ -135,6 +136,11 @@ export class WorkflowRunner {
   }
 
   private createProvider(providerName: string, model: string): ProviderAdapter {
+    // Support mock provider for testing
+    if (providerName === 'mock') {
+      return new MockProvider();
+    }
+    
     if (providerName === 'openai') {
       return OpenAIProvider.fromEnv();
     }

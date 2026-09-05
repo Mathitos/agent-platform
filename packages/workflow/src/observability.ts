@@ -12,8 +12,11 @@ import { TelemetryStore } from './telemetry-store';
 export class WorkflowObservability {
   private telemetryStore: TelemetryStore;
 
-  constructor(userId?: string) {
-    this.telemetryStore = new TelemetryStore({ userId: userId || 'default' });
+  constructor(userId?: string, storePath?: string) {
+    this.telemetryStore = new TelemetryStore({ 
+      userId: userId || 'default',
+      storePath 
+    });
   }
 
   status(options: WorkflowStatusOptions): string {
