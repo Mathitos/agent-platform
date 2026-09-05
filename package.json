@@ -1,0 +1,23 @@
+{
+  "name": "loom-root",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Loom — weave many agents and model providers into one CLI workflow",
+  "author": "Matheus Anzzulin",
+  "license": "MIT",
+  "scripts": {
+    "build": "pnpm -r run build",
+    "test": "pnpm -r run test",
+    "typecheck": "pnpm -r run typecheck",
+    "loom": "pnpm --filter @loom/cli start"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.16",
+    "typescript": "^5.3.3",
+    "vitest": "^1.2.2"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=8.0.0"
+  }
+}
