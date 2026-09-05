@@ -19,3 +19,5 @@ Package is **not published yet** — command shown for the intended distribution
 ## License
 
 [MIT](LICENSE) © Matheus Anzzulin
+
+<!-- loom cloud-agent ok -->
