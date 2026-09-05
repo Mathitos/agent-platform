@@ -1,6 +1,7 @@
 import * as fs from 'fs';
 import { Tool, ToolDefinition, ToolExecutionContext, ToolExecutionResult } from './types';
 import { PathPermissionChecker } from './permissions';
+import { I18n } from '@loom/core';
 
 export class FileWriteTool extends Tool {
   getDefinition(): ToolDefinition {
@@ -31,19 +32,20 @@ export class FileWriteTool extends Tool {
     context: ToolExecutionContext
   ): Promise<ToolExecutionResult> {
     try {
+      const t = I18n.t.bind(I18n);
       const { path: filePath, content } = args;
 
       if (!filePath || typeof filePath !== 'string') {
         return {
           success: false,
-          error: 'Missing or invalid "path" parameter',
+          error: t('errors.missingPathParam'),
         };
       }
 
       if (content === undefined || content === null) {
         return {
           success: false,
-          error: 'Missing "content" parameter',
+          error: t('errors.missingContentParam'),
         };
       }
 
@@ -62,7 +64,7 @@ export class FileWriteTool extends Tool {
 
       return {
         success: true,
-        output: `Successfully wrote to ${filePath}`,
+        output: t('errors.writeSuccess')(filePath),
       };
     } catch (error) {
       return {

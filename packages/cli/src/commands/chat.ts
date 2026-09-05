@@ -34,13 +34,14 @@ export class ChatCommand {
 
   private static async singleTurn(provider: ProviderAdapter, message: string): Promise<void> {
     try {
+      const t = I18n.t.bind(I18n);
       console.log(`\n[${provider.getName()}]`);
       const response = await provider.chat({
         messages: [{ role: 'user', content: message }],
       });
-      console.log(`\n${response.content || '(no response)'}\n`);
+      console.log(`\n${response.content || t('chat.noResponse')}\n`);
       if (response.usage) {
-        console.log(`Tokens: ${response.usage.totalTokens} (prompt: ${response.usage.promptTokens}, completion: ${response.usage.completionTokens})`);
+        console.log(t('chat.tokens')(response.usage.totalTokens, response.usage.promptTokens, response.usage.completionTokens));
       }
     } catch (error) {
       const t = I18n.t.bind(I18n);
@@ -50,8 +51,9 @@ export class ChatCommand {
   }
 
   private static async repl(provider: ProviderAdapter): Promise<void> {
-    console.log(`\nLoom Chat [${provider.getName()}]`);
-    console.log('Type your message and press Enter. Type "exit" or "quit" to leave.\n');
+    const t = I18n.t.bind(I18n);
+    console.log(`\n${t('chat.header')(provider.getName())}`);
+    console.log(`${t('chat.prompt')}\n`);
 
     const rl = readline.createInterface({
       input: process.stdin,
@@ -72,7 +74,7 @@ export class ChatCommand {
       }
 
       if (input === 'exit' || input === 'quit') {
-        console.log('\nGoodbye!\n');
+        console.log(`\n${t('chat.goodbye')}\n`);
         rl.close();
         return;
       }

@@ -40,8 +40,9 @@ export class AgentCommand {
     message: string
   ): Promise<void> {
     try {
-      console.log(`\n[${provider.getName()} Agent with Tools]`);
-      console.log(`Workspace: ${workspaceRoot}`);
+      const t = I18n.t.bind(I18n);
+      console.log(`\n${t('agent.header')(provider.getName())}`);
+      console.log(t('agent.workspace')(workspaceRoot));
       console.log('');
 
       const agent = new AgentExecutor(provider, {
@@ -58,21 +59,21 @@ export class AgentCommand {
 
         if (msg.role === 'assistant') {
           if (msg.tool_calls && msg.tool_calls.length > 0) {
-            console.log(`\n[Assistant] Calling tools:`);
+            console.log(`\n${t('agent.callingTools')}`);
             for (const toolCall of msg.tool_calls) {
               console.log(`  - ${toolCall.function.name}(${toolCall.function.arguments})`);
             }
           }
           if (msg.content) {
-            console.log(`\n[Assistant] ${msg.content}`);
+            console.log(`\n${t('agent.assistantLabel')} ${msg.content}`);
           }
         } else if (msg.role === 'tool') {
-          console.log(`\n[Tool: ${msg.name}] ${msg.content}`);
+          console.log(`\n${t('agent.toolLabel')(msg.name)} ${msg.content}`);
         }
       }
 
-      console.log(`\n---`);
-      console.log(`Iterations: ${result.iterations}, Tool calls: ${result.toolCalls}\n`);
+      console.log(`\n${t('agent.separator')}`);
+      console.log(`${t('agent.summary')(result.iterations, result.toolCalls)}\n`);
     } catch (error) {
       const t = I18n.t.bind(I18n);
       console.error(`${t('errors.chatFailed')}: ${error instanceof Error ? error.message : String(error)}`);
@@ -81,9 +82,10 @@ export class AgentCommand {
   }
 
   private static async repl(provider: ProviderAdapter, workspaceRoot: string): Promise<void> {
-    console.log(`\nLoom Agent [${provider.getName()}] with Tools`);
-    console.log(`Workspace: ${workspaceRoot}`);
-    console.log('Type your message and press Enter. Type "exit" or "quit" to leave.\n');
+    const t = I18n.t.bind(I18n);
+    console.log(`\n${t('agent.replHeader')(provider.getName())}`);
+    console.log(t('agent.workspace')(workspaceRoot));
+    console.log(`${t('agent.prompt')}\n`);
 
     const rl = readline.createInterface({
       input: process.stdin,
@@ -110,7 +112,7 @@ export class AgentCommand {
       }
 
       if (input === 'exit' || input === 'quit') {
-        console.log('\nGoodbye!\n');
+        console.log(`\n${t('agent.goodbye')}\n`);
         rl.close();
         return;
       }
@@ -124,7 +126,7 @@ export class AgentCommand {
 
           if (msg.role === 'assistant') {
             if (msg.tool_calls && msg.tool_calls.length > 0) {
-              console.log(`\n[Tools]:`);
+              console.log(`\n${t('agent.toolsLabel')}`);
               for (const toolCall of msg.tool_calls) {
                 const args = JSON.parse(toolCall.function.arguments);
                 console.log(`  ${toolCall.function.name}(${JSON.stringify(args)})`);

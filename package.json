@@ -5,6 +5,24 @@
   "description": "Loom — weave many agents and model providers into one CLI workflow",
   "author": "Matheus Anzzulin",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Mathitos/agent-platform.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Mathitos/agent-platform/issues"
+  },
+  "homepage": "https://github.com/Mathitos/agent-platform#readme",
+  "keywords": [
+    "agent",
+    "ai",
+    "cli",
+    "openai",
+    "bionic",
+    "local-ai",
+    "tools",
+    "automation"
+  ],
   "scripts": {
     "build": "pnpm -r run build",
     "test": "pnpm -r run test",

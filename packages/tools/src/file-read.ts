@@ -1,6 +1,7 @@
 import * as fs from 'fs';
 import { Tool, ToolDefinition, ToolExecutionContext, ToolExecutionResult } from './types';
 import { PathPermissionChecker } from './permissions';
+import { I18n } from '@loom/core';
 
 export class FileReadTool extends Tool {
   getDefinition(): ToolDefinition {
@@ -26,12 +27,13 @@ export class FileReadTool extends Tool {
     context: ToolExecutionContext
   ): Promise<ToolExecutionResult> {
     try {
+      const t = I18n.t.bind(I18n);
       const { path: filePath } = args;
 
       if (!filePath || typeof filePath !== 'string') {
         return {
           success: false,
-          error: 'Missing or invalid "path" parameter',
+          error: t('errors.missingPathParam'),
         };
       }
 
@@ -46,7 +48,7 @@ export class FileReadTool extends Tool {
       if (!PathPermissionChecker.pathExists(validatedPath)) {
         return {
           success: false,
-          error: `File not found: ${filePath}`,
+          error: t('errors.fileNotFound')(filePath),
         };
       }
 
@@ -55,7 +57,7 @@ export class FileReadTool extends Tool {
       if (!stats.isFile()) {
         return {
           success: false,
-          error: `Path is not a file: ${filePath}`,
+          error: t('errors.notAFile')(filePath),
         };
       }
 
