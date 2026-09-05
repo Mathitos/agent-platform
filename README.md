@@ -7,6 +7,10 @@
 ## Docs
 
 - [Product Requirements Document (v1 FROZEN)](docs/PRD.md)
+- [Technical Design v0](docs/architecture.md)
+- [ADR-001 — Provider adapters](docs/adr/001-provider-adapters.md)
+- [ADR-002 — Workflow schema](docs/adr/002-workflow-schema.md)
+- [ADR-003 — Telemetry store](docs/adr/003-telemetry-store.md)
 
 ## Install (preview)
 
