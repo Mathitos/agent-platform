@@ -4,6 +4,9 @@ export class CLI {
   private static readonly VERSION = '0.1.0';
 
   static run(args: string[]): void {
+    // Initialize locale from environment
+    I18n.initFromEnv();
+
     if (args.length === 0 || args.includes('--help') || args.includes('-h')) {
       this.showHelp();
       return;
@@ -26,8 +29,12 @@ export class CLI {
       case 'git':
         this.runGit(args.slice(1));
         break;
+      case 'locale':
+        this.runLocale(args.slice(1));
+        break;
       default:
-        console.error(`Unknown command: ${command}`);
+        const t = I18n.t.bind(I18n);
+        console.error(t('cli.unknownCommand')(command));
         console.log('');
         this.showHelp();
         process.exit(1);
@@ -39,8 +46,9 @@ export class CLI {
     console.log(`${t('cli.description')}\n`);
     console.log(`${t('cli.help')}:\n`);
     console.log(`  loom chat              ${t('cli.commands.chat')}`);
-    console.log(`  loom agent [message]   Start agent with tools (M2: files, shell, memory)`);
+    console.log(`  loom agent [message]   ${t('cli.commands.agent')}`);
     console.log(`  loom git <subcommand>  Git operations (status, diff, commit, branch-info)`);
+    console.log(`  loom locale [locale]   ${t('cli.commands.locale')}`);
     console.log(`  loom version           ${t('cli.commands.version')}`);
     console.log(`  loom --help            ${t('cli.commands.help')}`);
   }
@@ -63,6 +71,28 @@ export class CLI {
   static async runGit(args: string[]): Promise<void> {
     const { handleGitCommand } = await import('./commands/git');
     await handleGitCommand(args);
+  }
+
+  static runLocale(args: string[]): void {
+    const t = I18n.t.bind(I18n);
+    
+    if (args.length === 0) {
+      // Show current locale
+      console.log(t('locale.current')(I18n.getLocale()));
+      console.log(t('locale.available'));
+      return;
+    }
+
+    const newLocale = args[0];
+    const availableLocales = I18n.getAvailableLocales();
+    
+    if (availableLocales.includes(newLocale as any)) {
+      I18n.setLocale(newLocale as any);
+      console.log(t('locale.set')(newLocale));
+    } else {
+      console.error(t('locale.invalid')(newLocale));
+      process.exit(1);
+    }
   }
 
   static getVersion(): string {

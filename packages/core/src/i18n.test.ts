@@ -120,6 +120,10 @@ describe('I18n', () => {
       expect(I18n.t('cli.commands.chat')).toBe('Iniciar uma sessão de chat');
     });
 
+    it('should translate agent command to Portuguese', () => {
+      expect(I18n.t('cli.commands.agent')).toBe('Iniciar agente com ferramentas (M2: arquivos, shell, memória)');
+    });
+
     it('should translate version command to Portuguese', () => {
       expect(I18n.t('cli.commands.version')).toBe('Mostrar versão');
     });
@@ -145,6 +149,55 @@ describe('I18n', () => {
       const errorFn = I18n.t('errors.providerBlocked');
       expect(typeof errorFn).toBe('function');
       expect(errorFn('Teste')).toBe('Provedor Teste está atualmente bloqueado. Consulte a documentação para detalhes.');
+    });
+
+    it('should translate chat strings to Portuguese', () => {
+      expect(I18n.t('chat.prompt')).toBe('Digite sua mensagem e pressione Enter. Digite "exit" ou "quit" para sair.');
+      expect(I18n.t('chat.goodbye')).toBe('Até logo!');
+      expect(I18n.t('chat.noResponse')).toBe('(sem resposta)');
+    });
+
+    it('should translate agent strings to Portuguese', () => {
+      expect(I18n.t('agent.callingTools')).toBe('[Assistente] Chamando ferramentas:');
+      expect(I18n.t('agent.assistantLabel')).toBe('[Assistente]');
+      expect(I18n.t('agent.toolsLabel')).toBe('[Ferramentas]:');
+      expect(I18n.t('agent.separator')).toBe('---');
+      expect(I18n.t('agent.prompt')).toBe('Digite sua mensagem e pressione Enter. Digite "exit" ou "quit" para sair.');
+      expect(I18n.t('agent.goodbye')).toBe('Até logo!');
+    });
+
+    it('should translate tool error strings to Portuguese', () => {
+      expect(I18n.t('errors.pathTraversal')).toBe('Travessia de caminho detectada');
+      expect(I18n.t('errors.pathNotAllowed')).toBe('Caminho não permitido');
+      expect(I18n.t('errors.missingPathParam')).toBe('Parâmetro "path" ausente ou inválido');
+      expect(I18n.t('errors.missingContentParam')).toBe('Parâmetro "content" ausente');
+      expect(I18n.t('errors.missingCommandParam')).toBe('Parâmetro "command" ausente ou inválido');
+    });
+
+    it('should support dynamic Portuguese function strings', () => {
+      const unknownCmdFn = I18n.t('cli.unknownCommand');
+      expect(unknownCmdFn('teste')).toBe('Comando desconhecido: teste');
+
+      const chatHeaderFn = I18n.t('chat.header');
+      expect(chatHeaderFn('OpenAI')).toContain('OpenAI');
+
+      const tokensFn = I18n.t('chat.tokens');
+      expect(tokensFn(100, 50, 50)).toContain('conclusão');
+
+      const agentHeaderFn = I18n.t('agent.header');
+      expect(agentHeaderFn('OpenAI')).toContain('Agente');
+
+      const workspaceFn = I18n.t('agent.workspace');
+      expect(workspaceFn('/caminho')).toContain('Área de trabalho');
+
+      const summaryFn = I18n.t('agent.summary');
+      expect(summaryFn(5, 3)).toContain('Iterações');
+
+      const fileNotFoundFn = I18n.t('errors.fileNotFound');
+      expect(fileNotFoundFn('arquivo.txt')).toContain('não encontrado');
+
+      const commandTimeoutFn = I18n.t('errors.commandTimeout');
+      expect(commandTimeoutFn(5000)).toContain('expirou');
     });
   });
 
@@ -203,6 +256,7 @@ describe('I18n', () => {
         'cli.version',
         'cli.help',
         'cli.commands.chat',
+        'cli.commands.agent',
         'cli.commands.version',
         'cli.commands.help',
       ];
@@ -223,6 +277,11 @@ describe('I18n', () => {
         'errors.providerNotConfigured',
         'errors.invalidConfig',
         'errors.chatFailed',
+        'errors.pathTraversal',
+        'errors.pathNotAllowed',
+        'errors.missingPathParam',
+        'errors.missingContentParam',
+        'errors.missingCommandParam',
       ];
 
       I18n.setLocale('en');
@@ -234,6 +293,103 @@ describe('I18n', () => {
       for (const key of errorKeys) {
         expect(I18n.t(key)).not.toBe(key);
       }
+    });
+
+    it('should translate all chat strings in both languages', () => {
+      const chatKeys = [
+        'chat.prompt',
+        'chat.goodbye',
+        'chat.noResponse',
+      ];
+
+      I18n.setLocale('en');
+      for (const key of chatKeys) {
+        expect(I18n.t(key)).not.toBe(key);
+      }
+
+      I18n.setLocale('pt-BR');
+      for (const key of chatKeys) {
+        expect(I18n.t(key)).not.toBe(key);
+      }
+    });
+
+    it('should translate all agent strings in both languages', () => {
+      const agentKeys = [
+        'agent.callingTools',
+        'agent.assistantLabel',
+        'agent.toolsLabel',
+        'agent.separator',
+        'agent.prompt',
+        'agent.goodbye',
+      ];
+
+      I18n.setLocale('en');
+      for (const key of agentKeys) {
+        expect(I18n.t(key)).not.toBe(key);
+      }
+
+      I18n.setLocale('pt-BR');
+      for (const key of agentKeys) {
+        expect(I18n.t(key)).not.toBe(key);
+      }
+    });
+
+    it('should support dynamic chat function strings', () => {
+      I18n.setLocale('en');
+      const headerFn = I18n.t('chat.header');
+      expect(typeof headerFn).toBe('function');
+      expect(headerFn('OpenAI')).toContain('OpenAI');
+
+      const tokensFn = I18n.t('chat.tokens');
+      expect(typeof tokensFn).toBe('function');
+      expect(tokensFn(100, 50, 50)).toContain('100');
+    });
+
+    it('should support dynamic agent function strings', () => {
+      I18n.setLocale('en');
+      const headerFn = I18n.t('agent.header');
+      expect(typeof headerFn).toBe('function');
+      expect(headerFn('OpenAI')).toContain('OpenAI');
+
+      const workspaceFn = I18n.t('agent.workspace');
+      expect(typeof workspaceFn).toBe('function');
+      expect(workspaceFn('/path')).toContain('/path');
+
+      const toolLabelFn = I18n.t('agent.toolLabel');
+      expect(typeof toolLabelFn).toBe('function');
+      expect(toolLabelFn('read_file')).toContain('read_file');
+
+      const summaryFn = I18n.t('agent.summary');
+      expect(typeof summaryFn).toBe('function');
+      expect(summaryFn(5, 3)).toContain('5');
+      expect(summaryFn(5, 3)).toContain('3');
+    });
+
+    it('should support dynamic error function strings', () => {
+      I18n.setLocale('en');
+      const pathOutsideFn = I18n.t('errors.pathOutsideTrusted');
+      expect(typeof pathOutsideFn).toBe('function');
+      expect(pathOutsideFn('/outside')).toContain('/outside');
+
+      const fileNotFoundFn = I18n.t('errors.fileNotFound');
+      expect(typeof fileNotFoundFn).toBe('function');
+      expect(fileNotFoundFn('test.txt')).toContain('test.txt');
+
+      const notAFileFn = I18n.t('errors.notAFile');
+      expect(typeof notAFileFn).toBe('function');
+      expect(notAFileFn('dir/')).toContain('dir/');
+
+      const writeSuccessFn = I18n.t('errors.writeSuccess');
+      expect(typeof writeSuccessFn).toBe('function');
+      expect(writeSuccessFn('test.txt')).toContain('test.txt');
+
+      const commandTimeoutFn = I18n.t('errors.commandTimeout');
+      expect(typeof commandTimeoutFn).toBe('function');
+      expect(commandTimeoutFn(5000)).toContain('5000');
+
+      const commandFailedFn = I18n.t('errors.commandFailed');
+      expect(typeof commandFailedFn).toBe('function');
+      expect(commandFailedFn('1')).toContain('1');
     });
   });
 

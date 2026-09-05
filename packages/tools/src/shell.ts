@@ -1,6 +1,7 @@
 import { exec } from 'child_process';
 import { promisify } from 'util';
 import { Tool, ToolDefinition, ToolExecutionContext, ToolExecutionResult } from './types';
+import { I18n } from '@loom/core';
 
 const execAsync = promisify(exec);
 
@@ -47,12 +48,13 @@ export class ShellTool extends Tool {
     context: ToolExecutionContext
   ): Promise<ShellExecutionResult> {
     try {
+      const t = I18n.t.bind(I18n);
       const { command, timeout } = args;
 
       if (!command || typeof command !== 'string') {
         return {
           success: false,
-          error: 'Missing or invalid "command" parameter',
+          error: t('errors.missingCommandParam'),
         };
       }
 
@@ -77,7 +79,7 @@ export class ShellTool extends Tool {
         if (execError.killed && execError.signal === 'SIGTERM') {
           return {
             success: false,
-            error: `Command timed out after ${timeoutMs}ms`,
+            error: t('errors.commandTimeout')(timeoutMs),
             stdout: execError.stdout || undefined,
             stderr: execError.stderr || undefined,
             exitCode: execError.code,
@@ -87,7 +89,7 @@ export class ShellTool extends Tool {
         // Non-zero exit code
         return {
           success: false,
-          error: `Command failed with exit code ${execError.code || 'unknown'}`,
+          error: t('errors.commandFailed')(execError.code || 'unknown'),
           output: execError.stdout || undefined,
           stdout: execError.stdout || undefined,
           stderr: execError.stderr || undefined,

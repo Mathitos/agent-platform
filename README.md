@@ -1,26 +1,19 @@
 # Loom
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 **Loom** weaves many agents and model providers into one CLI workflow.
 
-> Status: M3 — Agent tools with MCP, Git, and PR support.
-
-## Docs
-
-- [Product Requirements Document (v1 FROZEN)](docs/PRD.md)
-- [Technical Design v0](docs/architecture.md)
-- [MCP Configuration Guide](docs/mcp-configuration.md)
-- [ADR-001 — Provider adapters](docs/adr/001-provider-adapters.md)
-- [ADR-002 — Workflow schema](docs/adr/002-workflow-schema.md)
-- [ADR-003 — Telemetry store](docs/adr/003-telemetry-store.md)
+> Status: M3 complete — Agent tools with MCP, Git, and PR support. Bilingual CLI (EN + PT-BR).
 
 ## Quick Start
 
 ### Prerequisites
 
-- Node.js 18+ 
+- Node.js 18+
 - pnpm 8+
 
-### Installation (Local Development)
+### Installation from Source
 
 ```bash
 # Clone the repository
@@ -49,11 +42,14 @@ pnpm loom version
 # Single-turn chat
 pnpm loom chat "What is TypeScript?"
 
-# Interactive REPL
+# Interactive chat REPL
 pnpm loom chat
 
-# Agent with tools
+# Agent with tools (files, shell, memory, MCP, git)
 pnpm loom agent "Read the README and summarize it"
+
+# Interactive agent REPL
+pntml loom agent
 
 # Git operations
 pnpm loom git status
@@ -88,20 +84,24 @@ export OPENAI_COMPATIBLE_MODEL="local-model"  # Optional
 [Bionic](https://bionicgpt.com/) provides a local OpenAI-compatible API:
 
 ```bash
-# Start Bionic (example)
-# ... follow Bionic setup instructions ...
+# Start Bionic (example with docker)
+docker run -d -p 11434:11434 ghcr.io/bionic-gpt/bionic-gpt:latest
 
 # Configure Loom to use Bionic
 export OPENAI_COMPATIBLE_BASE_URL="http://localhost:11434/v1"
 export OPENAI_COMPATIBLE_API_KEY="bionic-local-key"
 
-# Run chat
-pnpm loom chat "Hello from local AI!"
+# Run agent with local AI
+pnpm loom agent "analyze this code"
 ```
+
+### MCP (Model Context Protocol) Configuration
+
+MCP connector support is planned for future milestones. Configuration will be documented here when available.
 
 ### Cursor Provider
 
-The Cursor provider is **BLOCKED** in M1 per M0 findings:
+The Cursor provider is **BLOCKED** pending official API availability:
 
 - No documented official API for external access to Cursor subscription tokens
 - Attempting to use it will show a clear error message
@@ -141,18 +141,20 @@ Loom uses user-namespaced configuration from day one to support future multi-use
 - Project configs: `.loom/config.json` (in project root)
 - Default user ID: `default`
 
-M1 reads configuration from environment variables only. File-based config will be implemented in later milestones.
+M2 reads configuration from environment variables only. File-based config will be implemented in later milestones.
 
 ### Internationalization (i18n)
 
-Loom supports bilingual CLI output from day one:
+Loom supports **bilingual CLI output** from day one:
 
 - **English** (default)
 - **Brazilian Portuguese** (`pt-BR`)
 
-Set locale in user config (future) or defaults to `en`.
+The locale can be set via environment variable (future) or defaults to `en`. All user-facing strings are externalized and translated.
 
 ## Development
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed development guidelines.
 
 ### Monorepo Structure
 
@@ -181,7 +183,6 @@ pnpm test
 
 # Run tests for a specific package
 cd packages/core && pnpm test
-cd packages/providers && pnpm test
 ```
 
 ### Testing Without Live API Keys
@@ -200,88 +201,38 @@ pnpm test
 
 No API keys are required to run the test suite.
 
-## M1 Goals (Completed)
+## Milestones
 
-- [x] TypeScript/Node monorepo with pnpm workspaces
-- [x] Packages: `cli`, `core`, `providers`
-- [x] `loom` CLI with `--help`, `version`, `chat` commands
-- [x] ProviderAdapter interface
-- [x] OpenAI-compatible HTTP provider (supports Bionic/LM Studio)
-- [x] OpenAI official API provider
-- [x] Cursor provider stub (errors with clear blocked message)
-- [x] User-namespaced config structure
-- [x] Secrets from environment variables only
-- [x] Bilingual strings (EN + PT-BR)
-- [x] Basic CI: GitHub Actions (install, typecheck, test)
-- [x] Classes with static functions over module-level helpers
-- [x] Tests demonstrating correct request building
+- **M0** — Spike: Cursor/OpenAI/Bionic feasibility ✅
+- **M1** — Skeleton CLI: provider interface, OpenAI-compat, bilingual strings ✅
+- **M2** — Harness core: agent with tools (files, shell, memory) ✅
+- **M3** — MCP + git/PR helpers ✅
+- **M4** — OSS polish + i18n audit (current)
 
-## M2 Goals (Completed)
-
-- [x] Agent package with tool execution loop
-- [x] File read/write tools with permission checking
-- [x] Shell command execution tool
-- [x] Memory persistence tool (user-namespaced)
-- [x] Tool registry in AgentExecutor
-- [x] Multi-iteration agent loop with tool calls
-- [x] Comprehensive test coverage
-
-## M3 Goals (Completed)
-
-- [x] **MCP Connector Support**: Connect to MCP servers via stdio/HTTP
-  - List tools from MCP servers (`mcp_list_tools`)
-  - Invoke MCP tools (`mcp_call_tool`)
-  - Support for multiple concurrent MCP servers
-  - Comprehensive tests with mock transport
-- [x] **Git Helper Tools**: Core git operations
-  - `git_status`: Show working tree status
-  - `git_diff`: View changes (working/staged, specific files)
-  - `git_commit`: Commit changes (no force push)
-  - `git_branch_info`: Branch information and tracking
-  - Injectable runner for testing
-  - Integration tests with real temp repos
-- [x] **PR Helper Tools**: GitHub integration via gh CLI
-  - `pr_create`: Create pull requests (no auto-merge)
-  - `pr_view`: View PR details or open in browser
-  - `pr_list`: List PRs by state (open/closed/merged/all)
-  - Graceful error when gh CLI unavailable
-  - Mock gh invocations in tests
-- [x] **Tool Registry Integration**: All tools wired into AgentExecutor
-  - Optional MCP server configuration
-  - Git/PR tools enabled by default
-  - Proper cleanup on agent shutdown
-- [x] **CLI Commands**: Direct CLI access to git operations
-  - `loom git status`
-  - `loom git diff [--staged] [files...]`
-  - `loom git commit <message> [files...]`
-  - `loom git branch-info`
-- [x] **Documentation**: MCP configuration guide
-  - User-namespaced config at `~/.loom/users/{userId}/mcp-servers.json`
-  - Stdio and HTTP transport examples
-  - Security best practices
-  - Official MCP server examples
-
-## Next Steps (M4+)
-
-M4 will focus on polish and OSS readiness:
-
-- i18n polish for all new features
-- Enhanced error messages and user feedback
-- Performance optimization
-- Advanced workflow composition
-- OSS launch preparation
-
-See the [Product Requirements Document](docs/PRD.md) for full roadmap.
+See the [Product Requirements Document](docs/PRD.md) for the full roadmap and [CHANGELOG](docs/CHANGELOG.md) for version history.
 
 ## Contributing
 
 Loom is open source under the MIT license. Contributions welcome!
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes with tests
-4. Ensure `pnpm typecheck` and `pnpm test` pass
-5. Submit a pull request
+See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines on:
+
+- Development setup
+- Code style and conventions
+- Testing requirements
+- Pull request process
+- Agent review gate
+
+## Documentation
+
+- [Product Requirements Document (v1 FROZEN)](docs/PRD.md)
+- [Technical Design v0](docs/architecture.md)
+- [Changelog](docs/CHANGELOG.md)
+- [Review Gate Process](docs/REVIEW_GATE.md)
+- [MCP Configuration Guide](docs/mcp-configuration.md)
+- [ADR-001 — Provider adapters](docs/adr/001-provider-adapters.md)
+- [ADR-002 — Workflow schema](docs/adr/002-workflow-schema.md)
+- [ADR-003 — Telemetry store](docs/adr/003-telemetry-store.md)
 
 ## License
 
@@ -289,7 +240,7 @@ Loom is open source under the MIT license. Contributions welcome!
 
 ## Resources
 
-- [Product Requirements Document](docs/PRD.md)
 - [GitHub Repository](https://github.com/Mathitos/agent-platform)
+- [Contributing Guidelines](CONTRIBUTING.md)
 
 <!-- loom cloud-agent ok -->
