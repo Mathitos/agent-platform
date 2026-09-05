@@ -20,6 +20,9 @@ export class CLI {
       case 'chat':
         this.runChat(args.slice(1));
         break;
+      case 'agent':
+        this.runAgent(args.slice(1));
+        break;
       default:
         console.error(`Unknown command: ${command}`);
         console.log('');
@@ -33,6 +36,7 @@ export class CLI {
     console.log(`${t('cli.description')}\n`);
     console.log(`${t('cli.help')}:\n`);
     console.log(`  loom chat              ${t('cli.commands.chat')}`);
+    console.log(`  loom agent [message]   Start agent with tools (M2: files, shell, memory)`);
     console.log(`  loom version           ${t('cli.commands.version')}`);
     console.log(`  loom --help            ${t('cli.commands.help')}`);
   }
@@ -45,6 +49,11 @@ export class CLI {
   static async runChat(args: string[]): Promise<void> {
     const { ChatCommand } = await import('./commands/chat');
     await ChatCommand.execute(args);
+  }
+
+  static async runAgent(args: string[]): Promise<void> {
+    const { AgentCommand } = await import('./commands/agent');
+    await AgentCommand.execute(args);
   }
 
   static getVersion(): string {

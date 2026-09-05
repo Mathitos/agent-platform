@@ -376,7 +376,7 @@ describe('OpenAICompatibleProvider', () => {
         messages: [{ role: 'user', content: 'test' }],
       });
 
-      expect(response.content).toBe('');
+      expect(response.content).toBe(null);
     });
   });
 

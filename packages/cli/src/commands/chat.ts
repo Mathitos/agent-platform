@@ -38,7 +38,7 @@ export class ChatCommand {
       const response = await provider.chat({
         messages: [{ role: 'user', content: message }],
       });
-      console.log(`\n${response.content}\n`);
+      console.log(`\n${response.content || '(no response)'}\n`);
       if (response.usage) {
         console.log(`Tokens: ${response.usage.totalTokens} (prompt: ${response.usage.promptTokens}, completion: ${response.usage.completionTokens})`);
       }
@@ -81,8 +81,9 @@ export class ChatCommand {
 
       try {
         const response = await provider.chat({ messages });
-        console.log(`\n${response.content}\n`);
-        messages.push({ role: 'assistant', content: response.content });
+        const content = response.content || '';
+        console.log(`\n${content}\n`);
+        messages.push({ role: 'assistant', content });
       } catch (error) {
         const t = I18n.t.bind(I18n);
         console.error(`${t('errors.chatFailed')}: ${error instanceof Error ? error.message : String(error)}`);
