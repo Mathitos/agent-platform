@@ -2,12 +2,13 @@
 
 **Loom** weaves many agents and model providers into one CLI workflow.
 
-> Status: M1 skeleton — basic CLI with provider adapters.
+> Status: M3 — Agent tools with MCP, Git, and PR support.
 
 ## Docs
 
 - [Product Requirements Document (v1 FROZEN)](docs/PRD.md)
 - [Technical Design v0](docs/architecture.md)
+- [MCP Configuration Guide](docs/mcp-configuration.md)
 - [ADR-001 — Provider adapters](docs/adr/001-provider-adapters.md)
 - [ADR-002 — Workflow schema](docs/adr/002-workflow-schema.md)
 - [ADR-003 — Telemetry store](docs/adr/003-telemetry-store.md)
@@ -50,6 +51,15 @@ pnpm loom chat "What is TypeScript?"
 
 # Interactive REPL
 pnpm loom chat
+
+# Agent with tools
+pnpm loom agent "Read the README and summarize it"
+
+# Git operations
+pnpm loom git status
+pnpm loom git diff --staged
+pnpm loom git commit "feat: add new feature"
+pnpm loom git branch-info
 ```
 
 ## Configuration
@@ -107,6 +117,8 @@ Loom is a TypeScript/Node.js monorepo using pnpm workspaces:
 packages/
 ├── core/          # Core types, interfaces, config, i18n
 ├── providers/     # Provider implementations (OpenAI, OpenAI-compatible, Cursor stub)
+├── tools/         # Tool implementations (file, shell, memory, MCP, git, PR)
+├── agent/         # AgentExecutor with tool loop
 └── cli/           # CLI commands and user interface
 ```
 
@@ -204,14 +216,60 @@ No API keys are required to run the test suite.
 - [x] Classes with static functions over module-level helpers
 - [x] Tests demonstrating correct request building
 
-## Next Steps (M2+)
+## M2 Goals (Completed)
 
-M2 will focus on the harness core:
+- [x] Agent package with tool execution loop
+- [x] File read/write tools with permission checking
+- [x] Shell command execution tool
+- [x] Memory persistence tool (user-namespaced)
+- [x] Tool registry in AgentExecutor
+- [x] Multi-iteration agent loop with tool calls
+- [x] Comprehensive test coverage
 
-- File read/write tools
-- Shell command execution
-- Memory persistence
-- Basic tool loop
+## M3 Goals (Completed)
+
+- [x] **MCP Connector Support**: Connect to MCP servers via stdio/HTTP
+  - List tools from MCP servers (`mcp_list_tools`)
+  - Invoke MCP tools (`mcp_call_tool`)
+  - Support for multiple concurrent MCP servers
+  - Comprehensive tests with mock transport
+- [x] **Git Helper Tools**: Core git operations
+  - `git_status`: Show working tree status
+  - `git_diff`: View changes (working/staged, specific files)
+  - `git_commit`: Commit changes (no force push)
+  - `git_branch_info`: Branch information and tracking
+  - Injectable runner for testing
+  - Integration tests with real temp repos
+- [x] **PR Helper Tools**: GitHub integration via gh CLI
+  - `pr_create`: Create pull requests (no auto-merge)
+  - `pr_view`: View PR details or open in browser
+  - `pr_list`: List PRs by state (open/closed/merged/all)
+  - Graceful error when gh CLI unavailable
+  - Mock gh invocations in tests
+- [x] **Tool Registry Integration**: All tools wired into AgentExecutor
+  - Optional MCP server configuration
+  - Git/PR tools enabled by default
+  - Proper cleanup on agent shutdown
+- [x] **CLI Commands**: Direct CLI access to git operations
+  - `loom git status`
+  - `loom git diff [--staged] [files...]`
+  - `loom git commit <message> [files...]`
+  - `loom git branch-info`
+- [x] **Documentation**: MCP configuration guide
+  - User-namespaced config at `~/.loom/users/{userId}/mcp-servers.json`
+  - Stdio and HTTP transport examples
+  - Security best practices
+  - Official MCP server examples
+
+## Next Steps (M4+)
+
+M4 will focus on polish and OSS readiness:
+
+- i18n polish for all new features
+- Enhanced error messages and user feedback
+- Performance optimization
+- Advanced workflow composition
+- OSS launch preparation
 
 See the [Product Requirements Document](docs/PRD.md) for full roadmap.
 
