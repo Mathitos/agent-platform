@@ -10,12 +10,14 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@loom/core": "workspace:*",
     "@loom/agent": "workspace:*",
-    "@loom/providers": "workspace:*"
+    "@loom/core": "workspace:*",
+    "@loom/providers": "workspace:*",
+    "node-notifier": "^10.0.1"
   },
   "devDependencies": {
     "@types/node": "^20.11.16",
+    "@types/node-notifier": "^8.0.5",
     "typescript": "^5.3.3",
     "vitest": "^1.2.2"
   }

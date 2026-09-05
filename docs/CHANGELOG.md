@@ -7,7 +7,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### M4 — OSS Polish + i18n (In Progress)
+### M6 — OS Notifications + npm Packaging Polish
+
+#### Added
+- **OS notifications** for workflow completion (success/failure)
+  - Native desktop notifications on macOS, Linux (Windows/WSL best-effort)
+  - Bilingual notification strings (EN + PT-BR) via i18n
+  - Graceful degradation: logs once and continues if notifier unavailable
+  - Comprehensive test suite with mocked notifier (8 tests)
+- **npm/pnpm global install support**
+  - `files` field in `@loom/cli/package.json` for proper packaging
+  - Global install instructions in README (`npm install -g @loom/cli` / `pnpm add -g @loom/cli`)
+  - Smoke test script to verify bin entry (`pnpm smoke-test`)
+- Dependencies: `node-notifier` (workflow notifications)
+
+#### Changed
+- README: Global installation section with npm/pnpm install commands
+- README: Updated usage examples to show global `loom` command
+- CLI help now includes workflow commands (M5)
+
+#### Fixed
+- Flaky timing test in budget-tracker (reduced assertion threshold for CI stability)
+
+### M4 — OSS Polish + i18n
 
 #### Added
 - Comprehensive i18n coverage for all M2/M3 CLI strings (agent command, tool errors)

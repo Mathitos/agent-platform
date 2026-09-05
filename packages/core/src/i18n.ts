@@ -41,6 +41,14 @@ export const strings = {
       prompt: 'Type your message and press Enter. Type "exit" or "quit" to leave.',
       goodbye: 'Goodbye!',
     },
+    workflow: {
+      notification: {
+        successTitle: 'Workflow Complete',
+        successMessage: (name: string) => `Workflow "${name}" completed successfully`,
+        failureTitle: 'Workflow Failed',
+        failureMessage: (name: string) => `Workflow "${name}" failed`,
+      },
+    },
     errors: {
       providerNotConfigured: 'No provider configured. Set OPENAI_API_KEY or configure a provider.',
       providerBlocked: (name: string) => `${name} provider is currently blocked. See documentation for details.`,
@@ -100,6 +108,14 @@ export const strings = {
         `Iterações: ${iterations}, Chamadas de ferramentas: ${toolCalls}`,
       prompt: 'Digite sua mensagem e pressione Enter. Digite "exit" ou "quit" para sair.',
       goodbye: 'Até logo!',
+    },
+    workflow: {
+      notification: {
+        successTitle: 'Fluxo de Trabalho Concluído',
+        successMessage: (name: string) => `Fluxo de trabalho "${name}" concluído com sucesso`,
+        failureTitle: 'Fluxo de Trabalho Falhou',
+        failureMessage: (name: string) => `Fluxo de trabalho "${name}" falhou`,
+      },
     },
     errors: {
       providerNotConfigured: 'Nenhum provedor configurado. Defina OPENAI_API_KEY ou configure um provedor.',

@@ -16,6 +16,7 @@ import {
 import { TelemetryStore } from './telemetry-store';
 import { BudgetTracker } from './budget-tracker';
 import { MockProvider } from './mock-provider';
+import { WorkflowNotifier } from './notifier';
 
 export class WorkflowRunner {
   private workflow: WorkflowDefinition;
@@ -398,11 +399,15 @@ export class WorkflowRunner {
           tokensUsed: this.budgetTracker.getState().tokensUsed,
           costIncurred: this.budgetTracker.getState().costIncurred,
         });
+
+        WorkflowNotifier.notifySuccess(this.workflow.name);
       } else {
         this.runState.status = 'failed';
         this.emitEvent('run_failed', {
           reason: 'Some steps did not complete',
         });
+
+        WorkflowNotifier.notifyFailure(this.workflow.name);
       }
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
@@ -410,6 +415,7 @@ export class WorkflowRunner {
       if (this.runState.status !== 'paused' as RunStatus) {
         this.runState.status = 'failed';
         this.emitEvent('run_failed', { error: errorMessage });
+        WorkflowNotifier.notifyFailure(this.workflow.name);
       }
     }
 
