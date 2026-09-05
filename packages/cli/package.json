@@ -28,28 +28,33 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "bin": {
-    "loom": "./dist/bin.js"
+    "loom": "./dist/bundle.js"
   },
   "files": [
-    "dist/**/*",
-    "README.md",
-    "LICENSE"
+    "dist/bundle.js",
+    "dist/bundle.js.map"
   ],
+  "publishConfig": {
+    "dependencies": {}
+  },
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && node esbuild.config.js",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "start": "node dist/bin.js"
+    "start": "node dist/bin.js",
+    "prepack": "node scripts/prepare-pack.js",
+    "postpack": "node scripts/restore-pack.js"
   },
   "dependencies": {
+    "@loom/agent": "workspace:*",
     "@loom/core": "workspace:*",
     "@loom/providers": "workspace:*",
-    "@loom/agent": "workspace:*",
     "@loom/tools": "workspace:*",
     "@loom/workflow": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^20.11.16",
+    "esbuild": "^0.28.2",
     "typescript": "^5.3.3",
     "vitest": "^1.2.2"
   },

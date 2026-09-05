@@ -7,6 +7,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### M8 — Publishable CLI Packaging
+
+#### Added
+- Single-file bundled CLI using esbuild for distribution
+- `pnpm pack:cli` script to create distributable tarball
+- `pnpm test:pack` smoke test for verifying packed tarball functionality
+- Packaging configuration tests (12 new tests)
+- Prepack/postpack scripts to remove workspace dependencies from tarball
+- Installation instructions in README for both tarball and source installation
+
+#### Changed
+- CLI package now bundles all workspace dependencies into `dist/bundle.js`
+- CLI bin entry now points to bundled file instead of individual transpiled file
+- Build process now includes both TypeScript compilation and esbuild bundling
+- Package files field restricts tarball to only bundle.js and source map
+
+#### Technical Details
+- Bundle target: Node.js 18+, CommonJS format
+- Bundle size: ~98KB (uncompressed), includes all @loom/* packages
+- No external dependencies required for installation
+- Source maps included for debugging
+
 ### M7 — Flagship Workflow Template + Golden-Path Docs
 
 #### Added
@@ -93,7 +115,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - ADR-003: Telemetry store design
 - Updated architecture docs with workflow package
 
-### M4 — OSS Polish + i18n
+### M4 — OSS Polish + i18n (Completed)
 
 #### Added
 - Comprehensive i18n coverage for all M2/M3 CLI strings (agent command, tool errors)
@@ -190,10 +212,9 @@ Loom is a CLI agent platform that weaves multiple model providers into one workf
 ### Known Limitations
 
 - Cursor provider is blocked pending official API availability
-- MCP (Model Context Protocol) connectors planned for future milestone
-- Git/PR helpers planned for future milestone
 - File-based configuration (beyond environment variables) planned for future milestone
 - Multi-user support designed but not implemented (user-namespaced structure ready)
+- CLI not yet published to npm registry (manual installation from tarball required)
 
 ## Roadmap
 

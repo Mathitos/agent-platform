@@ -35,9 +35,6 @@ export class CLI {
       case 'locale':
         this.runLocale(args.slice(1));
         break;
-      case 'workflow':
-        this.runWorkflow(args.slice(1));
-        break;
       default:
         const t = I18n.t.bind(I18n);
         console.error(t('cli.unknownCommand')(command));
@@ -55,7 +52,6 @@ export class CLI {
     console.log(`  loom agent [message]   ${t('cli.commands.agent')}`);
     console.log(`  loom workflow <cmd>    ${t('cli.commands.workflow')}`);
     console.log(`  loom git <subcommand>  Git operations (status, diff, commit, branch-info)`);
-    console.log(`  loom workflow          Multi-agent workflow runner (M5)`);
     console.log(`  loom locale [locale]   ${t('cli.commands.locale')}`);
     console.log(`  loom version           ${t('cli.commands.version')}`);
     console.log(`  loom --help            ${t('cli.commands.help')}`);
