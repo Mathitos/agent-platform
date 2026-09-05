@@ -95,6 +95,10 @@ export class AgentExecutor {
     this.tools.set(tool.getName(), tool);
   }
 
+  getRegisteredToolNames(): string[] {
+    return Array.from(this.tools.keys());
+  }
+
   private getToolDefinitions(): ProviderToolDef[] {
     const definitions: ProviderToolDef[] = [];
 

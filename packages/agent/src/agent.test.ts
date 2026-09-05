@@ -564,8 +564,17 @@ describe('AgentExecutor', () => {
       enableGitTools: false,
     });
 
-    // Git tools should not be registered
-    // We can verify this by checking the tool definitions don't include git tools
+    const registeredTools = agent.getRegisteredToolNames();
+    
+    // Git tools should NOT be registered
+    expect(registeredTools).not.toContain('git_status');
+    expect(registeredTools).not.toContain('git_diff');
+    expect(registeredTools).not.toContain('git_commit');
+    expect(registeredTools).not.toContain('git_branch_info');
+    
+    // But core tools should still be there
+    expect(registeredTools).toContain('read_file');
+    expect(registeredTools).toContain('write_file');
   });
 
   it('should allow disabling PR tools', () => {
@@ -575,7 +584,16 @@ describe('AgentExecutor', () => {
       enablePRTools: false,
     });
 
-    // PR tools should not be registered
+    const registeredTools = agent.getRegisteredToolNames();
+    
+    // PR tools should NOT be registered
+    expect(registeredTools).not.toContain('pr_create');
+    expect(registeredTools).not.toContain('pr_view');
+    expect(registeredTools).not.toContain('pr_list');
+    
+    // But core tools should still be there
+    expect(registeredTools).toContain('read_file');
+    expect(registeredTools).toContain('execute_shell');
   });
 
   it('should register MCP tools when servers are configured', () => {
@@ -591,6 +609,12 @@ describe('AgentExecutor', () => {
       ],
     });
 
+    const registeredTools = agent.getRegisteredToolNames();
+    
+    // MCP tools should be registered
+    expect(registeredTools).toContain('mcp_list_tools');
+    expect(registeredTools).toContain('mcp_call_tool');
+    
     const mcpTools = AgentExecutor.getMCPTools();
     expect(mcpTools).toContain('mcp_list_tools');
     expect(mcpTools).toContain('mcp_call_tool');
@@ -602,7 +626,50 @@ describe('AgentExecutor', () => {
       workspaceRoot: tempDir,
     });
 
-    // MCP tools should not be registered when no servers configured
+    const registeredTools = agent.getRegisteredToolNames();
+    
+    // MCP tools should NOT be registered
+    expect(registeredTools).not.toContain('mcp_list_tools');
+    expect(registeredTools).not.toContain('mcp_call_tool');
+  });
+
+  it('should register all tools when everything enabled', () => {
+    const provider = new MockProvider([]);
+    const agent = new AgentExecutor(provider, {
+      workspaceRoot: tempDir,
+      enableGitTools: true,
+      enablePRTools: true,
+      mcpServers: [
+        {
+          name: 'test-server',
+          transport: 'stdio',
+          command: 'test-mcp',
+        },
+      ],
+    });
+
+    const registeredTools = agent.getRegisteredToolNames();
+    
+    // Should have core tools
+    expect(registeredTools).toContain('read_file');
+    expect(registeredTools).toContain('write_file');
+    expect(registeredTools).toContain('execute_shell');
+    expect(registeredTools).toContain('memory');
+    
+    // Should have Git tools
+    expect(registeredTools).toContain('git_status');
+    expect(registeredTools).toContain('git_diff');
+    expect(registeredTools).toContain('git_commit');
+    expect(registeredTools).toContain('git_branch_info');
+    
+    // Should have PR tools
+    expect(registeredTools).toContain('pr_create');
+    expect(registeredTools).toContain('pr_view');
+    expect(registeredTools).toContain('pr_list');
+    
+    // Should have MCP tools
+    expect(registeredTools).toContain('mcp_list_tools');
+    expect(registeredTools).toContain('mcp_call_tool');
   });
 
   it('should cleanup MCP connections on shutdown', async () => {
